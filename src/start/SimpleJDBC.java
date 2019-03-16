@@ -1,11 +1,14 @@
-package start;
+package project3;
 
 import java.sql.*;
+//util.*
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 
 public class SimpleJDBC {
+	static Statement statement;
 
 	private static int sqlCode=0; //Variable to hold SQLCODE
 	private static String sqlState="00000"; //var to hold SQLSTATE
@@ -108,7 +111,89 @@ public class SimpleJDBC {
 			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
 		}
 	}
-
+	
+	
+	//Q2 part 2 (modification) insert a new activity
+	public static String insertActivity(String activityName, String activityTime, String inputPrice) { 
+		//parse price
+		double newPrice=0.0;
+		try {
+			newPrice = Double.parseDouble(inputPrice);
+		}catch(InputMismatchException e) {
+			return "Please type in a valid price";
+		}
+		
+		//insert an activity
+		try {
+			insert(statement, "Activity", "INSERT INTO activity VALUES('"+activityName+"','"+activityTime+"',"+newPrice+")");
+			
+		}catch(SQLException e) {
+			//stop inserting if an error occurs
+			
+			sqlCode = e.getErrorCode(); // Get SQLCODE
+			sqlState = e.getSQLState(); // Get SQLSTATE
+			
+			if(sqlCode==22007) {
+				return "Please type in a valid date";
+			}
+			
+			return ("Code: " + sqlCode + "  sqlState: " + sqlState);
+		}
+		
+		return "Successfully inserted your activity!";
+	}
+	
+	
+	//Q2 part 5 (modification) modify a price
+	public static String modifyPrice(String activityName, String activityTime, String inputPrice) {
+		//parse price
+		double newPrice=0.0;
+		try {
+			newPrice = Double.parseDouble(inputPrice);
+		}catch(InputMismatchException e) {
+			return "Please type in a valid new price";
+		}
+		
+		ResultSet rset = null;
+		String tempQuery = "SELECT * FROM activity WHERE activityName='"+activityName
+				+"' AND activityTime='"+activityTime+"'";
+		try {
+			rset = statement.executeQuery(tempQuery);
+			
+		}catch(SQLException e){
+			sqlCode = e.getErrorCode(); // Get SQLCODE
+			sqlState = e.getSQLState(); // Get SQLSTATE
+			return ("Code: " + sqlCode + "  sqlState: " + sqlState);
+		}
+		
+		try {
+			if(rset.next()) {
+				//activity record exists
+				//so update the price
+				tempQuery="UPDATE activity SET activity.price ="+newPrice
+						+" WHERE activity.activityName ='"+activityName+"' AND activity.activityTime='"
+						+activityTime+"'";
+				statement.executeQuery(tempQuery);
+			}else {
+				//activity not found
+				return "The activity you entered does not exist. Please re-enter a valid activity.";
+				
+			}
+		}catch(SQLException e) {
+			sqlCode = e.getErrorCode(); // Get SQLCODE
+			sqlState = e.getSQLState(); // Get SQLSTATE
+			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+		}		
+		
+		return "Successfully modified the price of the activity you've specified";
+	}
+	
+	
+	
+	
+	
+	
+	
 }
 
 
