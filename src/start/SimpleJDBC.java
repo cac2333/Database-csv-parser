@@ -125,9 +125,9 @@ public class SimpleJDBC {
 		}
 		
 		try {
-			// SELECT price FROM Activity
+			// SELECT totalPrice FROM Reservation
 			// WHERE activityTime >= startDate AND activityTime <= endDate
-			selectSQL = "SELECT SUM(price) FROM Activity WHERE activityTime >= '" + startDate +
+			selectSQL = "SELECT SUM(totalPrice) FROM Reservation WHERE activityTime >= '" + startDate +
 					"' AND activityTime <= '" + endDate + "'";
 			System.out.println(selectSQL);
 			rset = statement.executeQuery(selectSQL);
