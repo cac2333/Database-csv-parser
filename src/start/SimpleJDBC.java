@@ -57,8 +57,10 @@ public class SimpleJDBC {
 		//String[] result = selectActivities("2019-01-01");
 		//System.out.print(Arrays.toString(result));
 		
-		insertReservation("2019-03-21 13:11:23", "(+1)5140056777", "10","140.9","Taeyeon Fan Meeting","2019-03-22 09:00:01");
-
+		//insertReservation("2019-03-21 13:11:23", "(+1)5140056777", "10","140.9","Taeyeon Fan Meeting","2019-03-22 09:00:01");
+		//System.out.println(storedProcedure("2019-01-01"));
+		
+		
 		rset.close();
 		statement.close();
 		con.close();
@@ -267,6 +269,27 @@ public class SimpleJDBC {
 		}
 		return "";
 	}
+	
+	//stored procedure calling
+	public static String storedProcedure(String inputDate) {
+		String query = "SELECT assistanceList('"+inputDate+"')";
+		String result = "";
+		try {
+			rset = statement.executeQuery(query);
+			if(!rset.next()) {
+				return "";
+			}else {
+				result = rset.getString(1);
+			}
+		}catch(SQLException e) {
+			sqlCode = e.getErrorCode(); // Get SQLCODE
+			sqlState = e.getSQLState(); // Get SQLSTATE
+			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+		}
+		
+		return result;
+	}
+	
 	
 	
 	
