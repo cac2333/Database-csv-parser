@@ -257,7 +257,7 @@ public class UserInterface extends JFrame implements Runnable{
 		pvisitor.removeAll();
 		
 			
-		String[] activityList=db.selectActivities(date);
+		String[][] activityList=db.selectActivities(date);
 			
 			
 		
