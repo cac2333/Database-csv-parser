@@ -177,7 +177,7 @@ public class Database {
 		
 		
 	//Q2 PART 1 (a) (query) select activities according to user’s search 
-	public static String[][] selectActivities(String inputDate) {
+	public String[][] selectActivities(String inputDate) {
 		ArrayList<String[]> rowList=new ArrayList<String[]>();
 		
 		//append hh:mm:ss
