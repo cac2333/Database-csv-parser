@@ -197,7 +197,7 @@ public class Database {
 		try {
 			if (!rset.next()) {                            //if rs.next() returns false
 	            //then there are no rows.
-				String[][] immediateResult = {{null},{null},{null}};
+				String[][] immediateResult = null;
 				return immediateResult;
 			}
 			else {
