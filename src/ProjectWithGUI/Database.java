@@ -176,51 +176,54 @@ public class Database {
 		
 		
 		
-		//Q2 PART 1 (a) (query) select activities according to user’s search 
-		public String[] selectActivities(String inputDate) {
-			ArrayList<String> rowList=new ArrayList<String>();
-			
-			//append hh:mm:ss
-			String start = inputDate+" 00:00:00";
-			String end   = inputDate+" 23:59:59";
-			
-			String tempQuery = "SELECT * FROM activity WHERE activityTime BETWEEN '"+start+"' AND '"+end+"'";
-			
-			try {
-				rset = statement.executeQuery(tempQuery);
-			}catch(SQLException e) {
-				sqlCode = e.getErrorCode(); // Get SQLCODE
-				sqlState = e.getSQLState(); // Get SQLSTATE
-				System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-			}
-			
-			try {
-				if (!rset.next()) {                            //if rs.next() returns false
-		            //then there are no rows.
-					String[] immediateResult = {"No records found"};
-					return immediateResult;
-				}
-				else {
-					
-						do {
-							String actName = rset.getString("activityName");
-							String actTime = rset.getString("activityTime");
-							double actPrice = rset.getDouble("price");
-							String oneRow = actName +" "+actTime+" "+actPrice;
-							rowList.add(oneRow);
-						} while (rset.next());
-				}			
-			}catch(SQLException e) {
-				sqlCode = e.getErrorCode(); // Get SQLCODE
-				sqlState = e.getSQLState(); // Get SQLSTATE
-				System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-			}
-			
-			String[] result = rowList.toArray(new String[0]);
-			
-			return result;
+	//Q2 PART 1 (a) (query) select activities according to userâ€™s search 
+	public static String[][] selectActivities(String inputDate) {
+		ArrayList<String[]> rowList=new ArrayList<String[]>();
+		
+		//append hh:mm:ss
+		String start = inputDate+" 00:00:00";
+		String end   = inputDate+" 23:59:59";
+		
+		String tempQuery = "SELECT * FROM activity WHERE activityTime BETWEEN '"+start+"' AND '"+end+"'";
+		
+		try {
+			rset = statement.executeQuery(tempQuery);
+		}catch(SQLException e) {
+			sqlCode = e.getErrorCode(); // Get SQLCODE
+			sqlState = e.getSQLState(); // Get SQLSTATE
+			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
 		}
 		
+		try {
+			if (!rset.next()) {                            //if rs.next() returns false
+	            //then there are no rows.
+				String[][] immediateResult = {{null},{null},{null}};
+				return immediateResult;
+			}
+			else {
+				
+					do {
+						String actName = rset.getString("activityName");
+						String actTime = rset.getString("activityTime");
+						double actPrice = rset.getDouble("price");
+						String[] oneRow = new String[3];
+						oneRow[0]=actName;
+						oneRow[1]=actTime;
+						oneRow[2]=""+actPrice;
+						rowList.add(oneRow);
+					} while (rset.next());
+			}			
+		}catch(SQLException e) {
+			sqlCode = e.getErrorCode(); // Get SQLCODE
+			sqlState = e.getSQLState(); // Get SQLSTATE
+			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+		}
+		
+		String[][] result = rowList.toArray(new String[0][]);
+		
+		return result;
+	}
+	
 		
 		
 		
