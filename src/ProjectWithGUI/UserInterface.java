@@ -75,7 +75,7 @@ public class UserInterface extends JFrame implements Runnable{
 		
 		JButton b1=new JButton("Search Activities");
 		
-		b1.setBounds(250, 150 , 300, 50);
+		b1.setBounds(250, 280 , 300, 100);
 		b1.setFont(new Font("TimesRoman", Font.PLAIN, 30));
 		b1.addActionListener(new ActionListener (){
 			@Override
