@@ -375,7 +375,7 @@ public class Database {
 					+" AND staffname='"+staffname+"'";
 			rset = statement.executeQuery(tempQuery);
 			if(!rset.next()) {
-				return "NON-EXISTENT";
+				return "Failed. NON-EXISTENT";
 			}else {
 				//make sure this is the right staff to fire
 				if(staffID.equals(""+rset.getInt(1)) && rset.getString(2).equals(staffname)) {
@@ -414,7 +414,7 @@ public class Database {
 					statement.executeUpdate("DELETE FROM STAFF WHERE staffid="+staffID);
 					
 				}else {
-					return "NON-EXISTENT";
+					return "Failed. NON-EXISTENT";
 				}
 			}
 			
@@ -422,9 +422,10 @@ public class Database {
 			sqlCode = e.getErrorCode(); // Get SQLCODE
 			sqlState = e.getSQLState(); // Get SQLSTATE
 			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+			return "Failed. NON-EXISTENT";
 		}
 		
-		return "";
+		return "Successful";
 	}
 	
 	
