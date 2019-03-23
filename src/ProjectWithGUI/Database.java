@@ -305,7 +305,7 @@ public class Database {
 			return result;
 		}
 	
-	public static String addStaff(String staffname) {
+	public String addStaff(String staffname) {
 		String tempQuery = "SELECT MAX(staffid) FROM STAFF";
 		int newStaffID=0;
 		try {
@@ -325,7 +325,7 @@ public class Database {
 	}
 	
 	
-	public static String deleteStaff(String staffID, String staffname, String replaceID) {
+	public String deleteStaff(String staffID, String staffname, String replaceID) {
 		//sanity check
 		String tempQuery ="";
 		try {
@@ -386,9 +386,10 @@ public class Database {
 	}
 	
 	// Q2.4 (query) select overall income over a specific time period
-	public String selectIncome(String startDate, String endDate) throws SQLException {
+	public static String selectIncome(String startDate, String endDate){
 		
 		String selectSQL;
+		rset = null;
 		String result = null;
 		
 		if (startDate.compareTo(endDate) == 1) {
@@ -402,6 +403,9 @@ public class Database {
 					"' AND activityTime <= '" + endDate + "'";
 			System.out.println(selectSQL);
 			rset = statement.executeQuery(selectSQL);
+			if(!rset.next()) {
+				return "0";
+			}
 			result = rset.getString(1);
 		}catch(SQLException e) {
 			sqlCode = e.getErrorCode(); // Get SQLCODE
@@ -421,5 +425,4 @@ public class Database {
 		
 		return result;
 	}
-
 }
