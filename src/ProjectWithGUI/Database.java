@@ -345,5 +345,94 @@ public class Database {
 		
 		return result;
 	}
+	
+	
+	public String addStaff(String staffname) {
+		String tempQuery = "SELECT MAX(staffid) FROM STAFF";
+		int newStaffID=0;
+		try {
+			rset = statement.executeQuery(tempQuery);
+			if(!rset.next()) {
+				return "";
+			}else {
+				newStaffID = rset.getInt(1)+1;
+				insert(statement,"staff",""+newStaffID+",'"+staffname+"'");
+			}
+		}catch(SQLException e) {
+			sqlCode = e.getErrorCode(); // Get SQLCODE
+			sqlState = e.getSQLState(); // Get SQLSTATE
+			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+		}
+		return "Successful! Welcome to our family!";
+	}
+	
+	
+	public String deleteStaff(String staffID, String staffname, String replaceID) {
+		//sanity check
+		String tempQuery ="";
+		try {
+			tempQuery="SELECT staffid,staffname FROM staff WHERE staffid="+staffID
+					+" AND staffname='"+staffname+"'";
+			rset = statement.executeQuery(tempQuery);
+			if(!rset.next()) {
+				return "NON-EXISTENT";
+			}else {
+				//make sure this is the right staff to fire
+				if(staffID.equals(""+rset.getInt(1)) && rset.getString(2).equals(staffname)) {
+					//update manage
+					statement.executeUpdate("UPDATE MANAGE " + 
+							"SET STAFFID=" + replaceID
+							+" WHERE STAFFID="+staffID);
+					
+					//update tour guide
+					rset = statement.executeQuery("SELECT * FROM tourguide WHERE staffid="+staffID);
+					if(rset.next()) {
+						rset =statement.executeQuery("SELECT * FROM tourguide WHERE staffid="+replaceID);
+						if(!rset.next()) {
+							//insert the replace id into tour guide
+							insert(statement,"tourguide",replaceID);
+						}
+							
+						//update guidedTour
+						statement.executeUpdate("UPDATE guidedTour " + 
+								"SET tourguideID=" + replaceID
+								+" WHERE tourguideID="+staffID);
+						//update tourGuide
+						rset =statement.executeQuery("SELECT * FROM tourguide WHERE staffid="+replaceID);
+						if(!rset.next()) {
+							statement.executeUpdate("UPDATE tourGuide " + 
+									"SET STAFFID=" + replaceID
+									+" WHERE STAFFID="+staffID);
+						}else {
+							//delete from tourguide
+							statement.executeUpdate("DELETE FROM tourguide WHERE staffid="+staffID);
+						}
+
+					}
+					
+					//delete the staff
+					statement.executeUpdate("DELETE FROM STAFF WHERE staffid="+staffID);
+					
+				}else {
+					return "NON-EXISTENT";
+				}
+			}
+			
+		}catch(SQLException e) {
+			sqlCode = e.getErrorCode(); // Get SQLCODE
+			sqlState = e.getSQLState(); // Get SQLSTATE
+			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+		}
+		
+		return "";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
