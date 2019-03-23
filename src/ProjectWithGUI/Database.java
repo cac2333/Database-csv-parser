@@ -326,9 +326,11 @@ public class Database {
 					"' AND activityTime <= '" + endDate + "'";
 			System.out.println(selectSQL);
 			rset = statement.executeQuery(selectSQL);
+			
 			if(!rset.next()){
 				return null;
 			}
+			
 			result = rset.getString(1);
 		}catch(SQLException e) {
 			sqlCode = e.getErrorCode(); // Get SQLCODE
