@@ -428,6 +428,17 @@ public class Database {
 		return "Successful";
 	}
 	
+	public void insertVisitor(String phone, String name, String notes) {
+		
+		try {
+			insert(statement,"visitor","'"+phone+"','"+name+"','"+notes+"'");
+			
+		}catch(SQLException e) {
+			sqlCode = e.getErrorCode(); // Get SQLCODE
+			sqlState = e.getSQLState(); // Get SQLSTATE
+			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+		}
+	}
 	
 	
 	
