@@ -151,6 +151,7 @@ public class UserInterface extends JFrame implements Runnable{
 	}
 
 	void initStaff(){
+		pstaff.removeAll();
 		// Login button
 		JButton login = new JButton("Login");
 		login.setFont(new Font("TimesRoman", Font.BOLD, 36));
@@ -262,12 +263,23 @@ public class UserInterface extends JFrame implements Runnable{
 	        }
 	    });
 		
+		JButton back=new JButton("Back");
+		back.setBounds(300, 630 , 200, 50);
+		back.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		back.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				initStaff();
+			}
+		});
+		
 		// add components to staff panel
 		pstaff.add(newAct);
 		pstaff.add(staffManage);
 		pstaff.add(income);
 		pstaff.add(modPrice);
 		pstaff.add(assis);
+		pstaff.add(back);
 		
 		// update panel
     	pstaff.repaint();
@@ -379,9 +391,30 @@ public class UserInterface extends JFrame implements Runnable{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				//System.out.println(name.getInputContext().toString());
-				String time = "" + yearBox.getSelectedItem() + "-" + monthBox.getSelectedItem() + "-" + dayBox.getSelectedItem();
-				db.insertActivity(name.getSelectedText(), time, price.getText(), ""+placeBox.getSelectedItem());
-				JOptionPane.showMessageDialog(null, "Activity Added Successfully", "SUCCESS!", JOptionPane.INFORMATION_MESSAGE);
+				if(name.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Please Enter A Valid Activity Name!", "Invaled Activity Name!", JOptionPane.ERROR_MESSAGE);
+				}else if(price.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Please Enter A Valid Price!", "Invaled Price!", JOptionPane.ERROR_MESSAGE);
+				}else {
+					try {
+						String time = "" + yearBox.getSelectedItem() + "-" + monthBox.getSelectedItem() + "-" + dayBox.getSelectedItem();
+						db.insertActivity(name.getText(), time, price.getText(), ""+placeBox.getSelectedItem());
+						JOptionPane.showMessageDialog(null, "Activity Added Successfully", "SUCCESS!", JOptionPane.INFORMATION_MESSAGE);
+					}catch(java.lang.NumberFormatException e){
+						JOptionPane.showMessageDialog(null, "A Valid Price Should Be A Number!", "Invaled Price!", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				
+			}
+		});
+		
+		JButton back=new JButton("Back");
+		back.setBounds(300, 600 , 200, 50);
+		back.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		back.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				staffMenu();
 			}
 		});
 
@@ -400,6 +433,7 @@ public class UserInterface extends JFrame implements Runnable{
 		pstaff.add(priceMsg);
 		pstaff.add(placeMsg);
 		pstaff.add(placeBox);
+		pstaff.add(back);
 		
 		//tells Swing this area is dirty
 		repaint();
@@ -419,15 +453,15 @@ public class UserInterface extends JFrame implements Runnable{
 		
 		JLabel income=new JLabel("Total Income");
 		income.setFont(new Font("TimesRoman", Font.BOLD, 48));
-		income.setBounds(250,10,350,60);
+		income.setBounds(220,10,350,60);
 		
 		JLabel from=new JLabel("Date From: ");
 		from.setFont(new Font("TimesRoman", Font.BOLD, 24));
-		from.setBounds(50,150,350,40);
+		from.setBounds(150,100,300,40);
 		
-		JLabel msg=new JLabel("Date End: ");
-		msg.setFont(new Font("TimesRoman", Font.BOLD, 24));
-		msg.setBounds(400,150,350,40);
+		JLabel end=new JLabel("Date End: ");
+		end.setFont(new Font("TimesRoman", Font.BOLD, 24));
+		end.setBounds(450,100,300,40);
 		
 		
 		// Year
@@ -440,9 +474,9 @@ public class UserInterface extends JFrame implements Runnable{
 		JComboBox yearBox=new JComboBox(year);
 		JLabel yearField=new JLabel("Year");
 		yearField.setFont(new Font("TimesRoman", Font.BOLD, 24));
-		yearField.setBounds(200,300,100,40);
+		yearField.setBounds(50,150,100,40);
 		yearBox.setFont(new Font(yearBox.getFont().getFontName(), Font.PLAIN, 24));
-		yearBox.setBounds(300, 300 , 200, 40);
+		yearBox.setBounds(150, 150 , 150, 40);
 		yearBox.setName("Year");
 
 		
@@ -456,9 +490,9 @@ public class UserInterface extends JFrame implements Runnable{
 		JComboBox monthBox=new JComboBox(month);
 		JLabel monthField=new JLabel("Month");
 		monthField.setFont(new Font("TimesRoman", Font.BOLD, 24));
-		monthField.setBounds(200,360,100,40);
+		monthField.setBounds(50,250,100,40);
 		monthBox.setFont(new Font(monthBox.getFont().getFontName(), Font.PLAIN, 24));
-		monthBox.setBounds(300, 360 , 200, 40);
+		monthBox.setBounds(150, 250 , 150, 40);
 		
 		
 		//Day
@@ -471,9 +505,9 @@ public class UserInterface extends JFrame implements Runnable{
 		JComboBox dayBox=new JComboBox(day);
 		JLabel dayField=new JLabel("Day");
 		dayField.setFont(new Font("TimesRoman", Font.BOLD, 24));
-		dayField.setBounds(200,420,100,40);
+		dayField.setBounds(50,350,100,40);
 		dayBox.setFont(new Font(dayBox.getFont().getFontName(), Font.PLAIN, 24));
-		dayBox.setBounds(300, 420 , 200, 40);
+		dayBox.setBounds(150, 350 , 150, 40);
 		
 		
 		// Year
@@ -484,11 +518,8 @@ public class UserInterface extends JFrame implements Runnable{
 		}
    
 		JComboBox yearBox2=new JComboBox(year2);
-		JLabel yearField2=new JLabel("Year");
-		yearField2.setFont(new Font("TimesRoman", Font.BOLD, 24));
-		yearField2.setBounds(200,300,100,40);
 		yearBox2.setFont(new Font(yearBox.getFont().getFontName(), Font.PLAIN, 24));
-		yearBox2.setBounds(300, 300 , 200, 40);
+		yearBox2.setBounds(450, 150 , 150, 40);
 		yearBox2.setName("Year");
 
 		
@@ -500,11 +531,8 @@ public class UserInterface extends JFrame implements Runnable{
 		}
 
 		JComboBox monthBox2=new JComboBox(month);
-		JLabel monthField2=new JLabel("Month");
-		monthField2.setFont(new Font("TimesRoman", Font.BOLD, 24));
-		monthField2.setBounds(200,360,100,40);
 		monthBox2.setFont(new Font(monthBox.getFont().getFontName(), Font.PLAIN, 24));
-		monthBox2.setBounds(300, 360 , 200, 40);
+		monthBox2.setBounds(450, 250 , 150, 40);
 		
 		
 		//Day
@@ -515,31 +543,50 @@ public class UserInterface extends JFrame implements Runnable{
 		}
 
 		JComboBox dayBox2=new JComboBox(day);
-		JLabel dayField2=new JLabel("Day");
-		dayField2.setFont(new Font("TimesRoman", Font.BOLD, 24));
-		dayField2.setBounds(200,420,100,40);
 		dayBox2.setFont(new Font(dayBox.getFont().getFontName(), Font.PLAIN, 24));
-		dayBox2.setBounds(300, 420 , 200, 40);
+		dayBox2.setBounds(450, 350 , 150, 40);
+		
+		JLabel totalIncome = new JLabel();
+		totalIncome.setBounds(200, 500, 400, 100);
+		totalIncome.setFont(new Font(dayBox.getFont().getFontName(), Font.PLAIN, 48));
 		
 		//search
 		
-		JButton add2=new JButton("Add Activity");
-		add2.setBounds(250, 500 , 300, 70);
-		add2.setFont(new Font("TimesRoman", Font.BOLD, 36));
-//		add2.addActionListener(new ActionListener (){
-//			@Override
-//			public void actionPerformed(ActionEvent arg0) {
-//				//System.out.println(name.getInputContext().toString());
-//				String time = "" + yearBox.getSelectedItem() + "-" + monthBox.getSelectedItem() + "-" + dayBox.getSelectedItem();
-//				db.insertActivity(name.getSelectedText(), time, price.getText(), ""+placeBox.getSelectedItem());
-//				JOptionPane.showMessageDialog(null, "Activity Added Successfully", "SUCCESS!", JOptionPane.INFORMATION_MESSAGE);
-//			}
-//		});
-
+		JButton display=new JButton("Display Total Income");
+		display.setBounds(140, 450 , 500, 70);
+		display.setFont(new Font("TimesRoman", Font.BOLD, 36));
+		display.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//System.out.println(name.getInputContext().toString());
+				String timeFrom = "" + yearBox.getSelectedItem() + "-" + monthBox.getSelectedItem() + "-" + dayBox.getSelectedItem();
+				String timeEnd = "" + yearBox2.getSelectedItem() + "-" + monthBox2.getSelectedItem() + "-" + dayBox2.getSelectedItem();
+				String income = db.selectIncome(timeFrom, timeEnd);
+				if(income == null) {
+					totalIncome.setText("	No income!");
+				}else {
+					totalIncome.setText(income);
+				}
+				
+			}
+		});
+		
+		JButton back=new JButton("Back");
+		back.setBounds(300, 600 , 200, 50);
+		back.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		back.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				staffMenu();
+			}
+		});
+		
+		
+		pstaff.add(from);
+		pstaff.add(end);
 		pstaff.add(yearBox);
 		pstaff.add(monthBox);
 		pstaff.add(dayBox);
-		pstaff.add(msg);	
 		pstaff.add(dayField);
 		pstaff.add(monthField);
 		pstaff.add(yearField);
@@ -547,9 +594,10 @@ public class UserInterface extends JFrame implements Runnable{
 		pstaff.add(income);
 		pstaff.add(monthBox2);
 		pstaff.add(dayBox2);
-		pstaff.add(dayField2);
 		pstaff.add(monthField);
-		pstaff.add(yearField2);
+		pstaff.add(display);
+		pstaff.add(totalIncome);
+		pstaff.add(back);
 		
 		//tells Swing this area is dirty
 		repaint();
@@ -610,9 +658,6 @@ public class UserInterface extends JFrame implements Runnable{
 		JLabel assisList = new JLabel();
 		assisList.setBounds(10, 150, 700, 200);
 		assisList.setFont(new Font(dayBox.getFont().getFontName(), Font.PLAIN, 16));
-          
-//		JScrollPane jsp = new JScrollPane();
-//		jsp.setBounds(10, 150, 700, 600);
 		
         //search
         
@@ -626,25 +671,28 @@ public class UserInterface extends JFrame implements Runnable{
   				String time = "" + yearBox.getSelectedItem() + "-" + monthBox.getSelectedItem() + "-" + dayBox.getSelectedItem();  				
   				String assistance = db.storedProcedure(time);
   				if(assistance.length() > 0) {
-//  					jsp.set = new JScrollPane(new JTextArea(assistance));
-//  					jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
-//  			        jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-//  			        pstaff.add(new JScrollPane(new JTextArea(assistance)));
-//	  			    repaint();
-//	  				//recompute the layout
-//	  				revalidate();
   					assisList.setText(assistance);
   				}  				
   			}
   		});
+  		
+  		JButton back=new JButton("Back");
+		back.setBounds(300, 600 , 200, 50);
+		back.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		back.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				staffMenu();
+			}
+		});
 		
 		pstaff.add(assis);
 		pstaff.add(yearBox);
 		pstaff.add(monthBox);
 		pstaff.add(dayBox);
 		pstaff.add(display);
-//		pstaff.add(scrollableTextArea);
 		pstaff.add(assisList);
+		pstaff.add(back);
 		
 		
 		//tells Swing this area is dirty
