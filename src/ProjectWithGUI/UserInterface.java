@@ -1,17 +1,14 @@
 package ProjectWithGUI;
 
-import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Calendar;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -22,6 +19,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -92,6 +90,11 @@ public class UserInterface extends JFrame implements Runnable{
 		});
 		
 		pvisitor.add(b1);
+		//tells Swing this area is dirty
+		repaint();
+		//recompute the layout
+		revalidate();
+		
 		
 	}
 	
@@ -252,7 +255,91 @@ public class UserInterface extends JFrame implements Runnable{
 		return label;
 	}
 	
-	void book(){
+	
+
+	void book(String name, String time, String price){
+
+		pvisitor.removeAll();		
+		
+		JLabel msg=new JLabel(name+" - "+time+" - \n"+"Price: "+price);
+		msg.setFont(new Font("TimesRoman", Font.BOLD, 28));
+		msg.setBounds(50,50,650,40);
+		
+		JLabel phoneMsg=new JLabel("Please enter your phone");
+		phoneMsg.setFont(new Font("TimesRoman", Font.PLAIN, 24));
+		phoneMsg.setBounds(50,200,250,40);
+		JTextField phone= new JTextField();
+		phone.setBounds(300, 200, 400, 40);
+		phone.setFont(new Font("TimesRoman", Font.PLAIN, 24));
+		
+		JLabel nameMsg=new JLabel("Please enter your name");
+		nameMsg.setFont(new Font("TimesRoman", Font.PLAIN, 24));
+		nameMsg.setBounds(50,250,250,40);
+		JTextField pname= new JTextField();
+		pname.setBounds(300, 250, 400, 40);
+		pname.setFont(new Font("TimesRoman", Font.PLAIN, 24));
+		
+		JLabel numMsg=new JLabel("Number of people");
+		numMsg.setFont(new Font("TimesRoman", Font.PLAIN, 24));
+		numMsg.setBounds(50,300,250,40);
+		JTextField num= new JTextField();
+		num.setBounds(300, 300, 400, 40);
+		num.setFont(new Font("TimesRoman", Font.PLAIN, 24));
+		
+		JLabel noteMsg=new JLabel("Note (Optional)");
+		noteMsg.setFont(new Font("TimesRoman", Font.PLAIN, 24));
+		noteMsg.setBounds(50,350,250,40);
+		JTextField note= new JTextField();
+		note.setBounds(300, 350, 400, 40);
+		note.setFont(new Font("TimesRoman", Font.PLAIN, 24));
+		
+		JButton confirm=new JButton("Confirm");
+		confirm.setBounds(300, 450 , 200, 50);
+		confirm.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		confirm.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//get current time
+				String now=LocalTime.now().toString();
+				String date=LocalDate.now().toString();
+				String str=date+" "+now.substring(0, now.length()-4);
+				System.out.println(str);
+				
+				db.insertVisitor(phone.getText(), pname.getText(), note.getText());
+				String msg=db.insertReservation(str, phone.getText(), 
+						num.getText(), price, name, time);
+				JOptionPane.showMessageDialog(new JFrame(), msg);
+				
+			}
+		});
+		
+		JButton search=new JButton("Back");
+		search.setBounds(300, 600 , 200, 50);
+		search.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		search.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				initVisitor();
+			}
+		});
+		
+		
+		pvisitor.add(msg);
+		pvisitor.add(phoneMsg);
+		pvisitor.add(phone);
+		pvisitor.add(numMsg);
+		pvisitor.add(num);
+		pvisitor.add(nameMsg);
+		pvisitor.add(pname);
+		pvisitor.add(noteMsg);
+		pvisitor.add(note);
+		pvisitor.add(confirm);
+		pvisitor.add(search);
+		
+		//tells Swing this area is dirty
+		repaint();
+		//recompute the layout
+		revalidate();
 		
 	}
 	
@@ -315,14 +402,17 @@ public class UserInterface extends JFrame implements Runnable{
 		table.setRowHeight(22);
 		table.setRowMargin(2);
 		table.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+		table.addColumnSelectionInterval(0, list[0].length-1);
 		
 		ListSelectionModel select=table.getSelectionModel();
 		select.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		select.addListSelectionListener(new ListSelectionListener(){
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				book();
-				
+				int row=table.getSelectedRow();
+				book(table.getValueAt(row, 0).toString(), 
+						table.getValueAt(row, 1).toString(), 
+						table.getValueAt(row, 2).toString());
 			}
 			
 		});
