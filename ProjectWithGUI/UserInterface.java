@@ -444,7 +444,186 @@ public class UserInterface extends JFrame implements Runnable{
     // page to manage staff member
     private void staffManagement() {
     	
-    }
+		pstaff.removeAll();
+		
+		// add new staff button
+		JButton add = new JButton("Add Staff");
+		add.setFont(new Font("TimesRoman", Font.BOLD, 36));
+		add.setBounds(200,200,360,80);
+			
+		// delete staff button
+		JButton delete = new JButton("Delete Staff");
+		delete.setFont(new Font("TimesRoman", Font.BOLD, 36));
+		delete.setBounds(200,320,360,80);
+	
+		// 
+		add.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            addStaffMember();
+	        }
+	    });
+		
+		delete.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            deleteStaffMember();
+	        }
+	    });
+		
+		JButton back=new JButton("Back");
+		back.setBounds(300, 600 , 200, 50);
+		back.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		back.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				staffMenu();
+			}
+		});
+		
+		pstaff.add(add);
+		pstaff.add(delete);
+		pstaff.add(back);
+		
+		//tells Swing this area is dirty
+		repaint();
+		//recompute the layout
+		revalidate();
+	}
+
+	// page to add staff member
+	private void addStaffMember() {
+		// clear the panel
+		pstaff.removeAll();
+		
+		JLabel newStaff=new JLabel("Add Staff");
+		newStaff.setFont(new Font("TimesRoman", Font.BOLD, 48));
+		newStaff.setBounds(250,10,350,60);
+		
+		JLabel nameMsg=new JLabel("Staff Name: ");
+		nameMsg.setFont(new Font("TimesRoman", Font.BOLD, 24));
+		nameMsg.setBounds(50,100,250,40);
+		JTextField name= new JTextField();
+		name.setBounds(300, 100, 400, 40);
+		name.setFont(new Font("TimesRoman", Font.BOLD, 24));
+		
+		JButton add=new JButton("Add Staff");
+		add.setBounds(250, 500 , 300, 70);
+		add.setFont(new Font("TimesRoman", Font.BOLD, 36));
+		add.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//System.out.println(name.getInputContext().toString());
+				//String time = "" + yearBox.getSelectedItem() + "-" + monthBox.getSelectedItem() + "-" + dayBox.getSelectedItem();
+				//db.insertActivity(name.getText(), time, price.getText(), ""+placeBox.getSelectedItem());
+				//JOptionPane.showMessageDialog(null, "Activity Added Successfully", "SUCCESS!", JOptionPane.INFORMATION_MESSAGE);
+				String sName = "" + name.getText();
+				if(sName.equals("")) {
+					JOptionPane.showMessageDialog(null, "Staff Name is Empty!", "Invaled Name!", JOptionPane.ERROR_MESSAGE);
+				}else {
+					db.addStaff(sName);
+					JOptionPane.showMessageDialog(null, "Staff Added Successfully", "SUCCESS!", JOptionPane.INFORMATION_MESSAGE);
+				}
+				
+			}
+		}); 
+		
+		JButton back=new JButton("Back");
+		back.setBounds(300, 600 , 200, 50);
+		back.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		back.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				staffManagement();
+			}
+		});
+		
+		pstaff.add(newStaff);
+		pstaff.add(nameMsg);
+		pstaff.add(name);
+		pstaff.add(add);
+		pstaff.add(back);
+		
+		//tells Swing this area is dirty
+		repaint();
+		//recompute the layout
+		revalidate();
+	}
+
+
+	// page to delete staff
+	private void deleteStaffMember() {
+
+ 		// clear the panel
+ 		pstaff.removeAll();
+
+ 		JLabel oldStaff=new JLabel("Delete Staff");
+ 		oldStaff.setFont(new Font("TimesRoman", Font.BOLD, 48));
+ 		oldStaff.setBounds(250,10,350,60);
+ 		
+ 		// 
+ 		JLabel oldnameMsg=new JLabel("[Old]Staff Name: ");
+ 		oldnameMsg.setFont(new Font("TimesRoman", Font.BOLD, 24));
+ 		oldnameMsg.setBounds(50,100,350,40);
+ 		JTextField oldname= new JTextField();
+ 		oldname.setBounds(400, 100, 200, 40);
+ 		oldname.setFont(new Font("TimesRoman", Font.BOLD, 24));
+ 		
+ 		JLabel oldIDMsg=new JLabel("[Old]Staff ID: ");
+ 		oldIDMsg.setFont(new Font("TimesRoman", Font.BOLD, 24));
+ 		oldIDMsg.setBounds(50,150,250,40);
+ 		JTextField oldID= new JTextField();
+ 		oldID.setBounds(400, 150, 200, 40);
+ 		oldID.setFont(new Font("TimesRoman", Font.BOLD, 24));
+ 		
+ 		JLabel newIDMsg=new JLabel("[New]Staff ID: ");
+ 		newIDMsg.setFont(new Font("TimesRoman", Font.BOLD, 24));
+ 		newIDMsg.setBounds(50,200,250,40);
+ 		JTextField newID= new JTextField();
+ 		newID.setBounds(400, 200, 200, 40);
+ 		newID.setFont(new Font("TimesRoman", Font.BOLD, 24));
+ 		
+ 		
+ 		JButton delete=new JButton("Delete Staff");
+ 		delete.setBounds(250, 500 , 300, 70);
+ 		delete.setFont(new Font("TimesRoman", Font.BOLD, 36));
+ 		delete.addActionListener(new ActionListener (){
+ 			@Override
+ 			public void actionPerformed(ActionEvent arg0) {
+ 				if(oldID.getText().equals("") || oldname.getText().equals("") || newID.getText().equals("")) {
+ 					JOptionPane.showMessageDialog(null, "Please complete the information!", "Incomplete Information!", JOptionPane.ERROR_MESSAGE);
+ 				}else {
+ 					String feedback = db.deleteStaff(oldID.getText(), oldname.getText(), newID.getText());
+ 	 				JOptionPane.showMessageDialog(null, feedback, "Feedback", JOptionPane.INFORMATION_MESSAGE);
+ 				}
+ 			}
+ 		}); 
+ 		
+ 		JButton back=new JButton("Back");
+		back.setBounds(300, 600 , 200, 50);
+		back.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		back.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				staffManagement();
+			}
+		});
+		
+		pstaff.add(delete);
+		pstaff.add(oldID);
+		pstaff.add(newID);
+		pstaff.add(newIDMsg);
+		pstaff.add(oldIDMsg);
+		pstaff.add(oldname);
+		pstaff.add(oldStaff);
+		pstaff.add(oldnameMsg);
+		pstaff.add(back);
+		
+		//tells Swing this area is dirty
+		repaint();
+		//recompute the layout
+		revalidate();
+	 }
     
     // page to display income
     private void showIncome() {
@@ -607,7 +786,77 @@ public class UserInterface extends JFrame implements Runnable{
     
     // page to modify price
     private void modifyPrice() {
+    	//clear the panel
+    	pstaff.removeAll();
     	
+		JLabel modP=new JLabel("Modify a Price");
+		modP.setFont(new Font("TimesRoman", Font.BOLD, 48));
+		modP.setBounds(250,10,350,60);
+		
+		JLabel nameMsg=new JLabel("Activity Name: ");
+		nameMsg.setFont(new Font("TimesRoman", Font.BOLD, 24));
+		nameMsg.setBounds(50,100,250,40);
+		JTextField name= new JTextField();
+		name.setBounds(300, 100, 400, 40);
+		name.setFont(new Font("TimesRoman", Font.BOLD, 24));
+		
+		JLabel timeMsg=new JLabel("Activity Time: ");
+		timeMsg.setFont(new Font("TimesRoman", Font.BOLD, 24));
+		timeMsg.setBounds(50,150,250,40);
+		JTextField time= new JTextField();
+		time.setBounds(300, 150, 400, 40);
+		time.setFont(new Font("TimesRoman", Font.BOLD, 24));
+		
+		
+		JLabel priceMsg=new JLabel("New Price: ");
+		priceMsg.setFont(new Font("TimesRoman", Font.BOLD, 24));
+		priceMsg.setBounds(50,200,150,40);
+		JTextField price = new JTextField();
+		price.setBounds(300, 200, 130, 40);
+		price.setFont(new Font("TimesRoman", Font.BOLD, 24));
+		
+		//MODIFY A PRICE BUTTON
+		JButton mod=new JButton("Modify!");
+		mod.setBounds(250, 500 , 300, 70);
+		mod.setFont(new Font("TimesRoman", Font.BOLD, 36));
+		mod.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//System.out.println(name.getInputContext().toString());
+				//String time = "" + yearBox.getSelectedItem() + "-" + monthBox.getSelectedItem() + "-" + dayBox.getSelectedItem();
+				//db.insertActivity(name.getSelectedText(), time, price.getText(), ""+placeBox.getSelectedItem());
+				//JOptionPane.showMessageDialog(null, "Activity Added Successfully", "SUCCESS!", JOptionPane.INFORMATION_MESSAGE);
+				
+				String responseMsg = db.modifyPrice(name.getText(),time.getText(),price.getText());
+				JOptionPane.showMessageDialog(null, responseMsg,"Notice",JOptionPane.INFORMATION_MESSAGE);
+				
+			}
+		});
+		
+		JButton back=new JButton("Back");
+		back.setBounds(300, 600 , 200, 50);
+		back.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		back.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				staffMenu();
+			}
+		});
+		
+		
+		pstaff.add(mod);
+		pstaff.add(modP);
+		pstaff.add(nameMsg);
+		pstaff.add(name);
+		pstaff.add(price);
+		pstaff.add(priceMsg);
+		pstaff.add(time);
+		pstaff.add(timeMsg);
+		pstaff.add(back);
+		//tells Swing this area is dirty
+		repaint();
+		//recompute the layout
+		revalidate();
     }
     
     // assistance information
