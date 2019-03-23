@@ -310,7 +310,7 @@ public class Database {
 	
 	
 	// Q2.4 (query) select overall income over a specific time period
-	public String selectIncome(String startDate, String endDate) throws SQLException {
+	public String selectIncome(String startDate, String endDate) {
 		
 		String selectSQL;
 		String result = null;
