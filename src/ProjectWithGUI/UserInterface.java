@@ -1,6 +1,8 @@
 package ProjectWithGUI;
 
+import java.awt.Checkbox;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -18,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 
 
 
@@ -162,7 +166,7 @@ public class UserInterface extends JFrame implements Runnable{
 		pvisitor.removeAll();
 		
 		JLabel msg=new JLabel("Please select a date");
-		msg.setFont(new Font("TimesRoman", Font.BOLD, 24));
+		msg.setFont(new Font("TimesRoman", Font.BOLD, 28));
 		msg.setBounds(200,80,350,40);
 		
 		
