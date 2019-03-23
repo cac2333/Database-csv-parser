@@ -1,4 +1,4 @@
-package start;
+package project3;
 
 import java.sql.*;
 import java.util.Scanner;
@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class SimpleJDBC {
+	
+	static Statement statement;
 
 	private static int sqlCode=0; //Variable to hold SQLCODE
 	private static String sqlState="00000"; //var to hold SQLSTATE
@@ -107,6 +109,46 @@ public class SimpleJDBC {
 			sqlState = e.getSQLState(); // Get SQLSTATE
 			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
 		}
+	}
+	
+	
+	
+	// Q2.4 (query) select overall income over a specific time period
+	public static String selectIncome(String startDate, String endDate) throws SQLException {
+		
+		String selectSQL;
+		ResultSet rset = null;
+		String result = null;
+		
+		if (startDate.compareTo(endDate) == 1) {
+			return "Please enter a valid date.";
+		}
+		
+		try {
+			// SELECT totalPrice FROM Reservation
+			// WHERE activityTime >= startDate AND activityTime <= endDate
+			selectSQL = "SELECT SUM(totalPrice) FROM Reservation WHERE activityTime >= '" + startDate +
+					"' AND activityTime <= '" + endDate + "'";
+			System.out.println(selectSQL);
+			rset = statement.executeQuery(selectSQL);
+			result = rset.getString(1);
+		}catch(SQLException e) {
+			sqlCode = e.getErrorCode(); // Get SQLCODE
+			sqlState = e.getSQLState(); // Get SQLSTATE
+			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+			if (sqlCode == 39004) {
+				return "null value not allowed";
+			}
+			if (sqlCode == 42804) {
+				return "Data type mismatch";
+			}
+			if (sqlCode == 42804) {
+				return "Data type mismatch";
+			}
+			
+		}
+		
+		return result;
 	}
 
 }
