@@ -257,9 +257,39 @@ public class UserInterface extends JFrame implements Runnable{
 		pvisitor.removeAll();
 		
 			
+		//send the query information to database
 		String[][] activityList=db.selectActivities(date);
+		
+		if(activityList==null){
+			
+			JLabel msg=new JLabel("No activity has been found");
+			msg.setFont(new Font("TimesRoman", Font.BOLD, 28));
+			msg.setBounds(200,200,400,60);
+			pvisitor.add(msg);
 			
 			
+		}else{
+			
+			listTable(activityList, 10, 10);
+			
+		}
+		
+		JButton search=new JButton("Back");
+		search.setBounds(300, 600 , 200, 50);
+		search.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+		search.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				searchActivity();
+			}
+		});
+		
+		pvisitor.add(search);
+			
+		//tells Swing this area is dirty
+		repaint();
+		//recompute the layout
+		revalidate();
 		
 		
 	}
@@ -267,16 +297,23 @@ public class UserInterface extends JFrame implements Runnable{
 	
 	
 	
-	void checkBoxBlock(String[] list, int x, int y){
+	void listTable(String[][] list, int x, int y){
 		
-		int side=FRAME_LENGTH-200;
-		int margin=side/list.length;
-		JPanel bg=new JPanel();
+		//scrolll pane layout
 		
-		bg.setBounds(10, 10, FRAME_WIDTH-20, FRAME_LENGTH);
-		JScrollPane scrollArea = new JScrollPane(bg);  
+		String[] title={"Activity", "Time", "Price"};
+		
+		JTable table=new JTable(list, title);
+		table.setRowSelectionAllowed(true);
+		table.setRowHeight(22);
+		table.setRowMargin(2);
+		table.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+		
+		JScrollPane scrollArea = new JScrollPane(table);  
+		scrollArea.setBounds(x, y, FRAME_WIDTH-100, FRAME_LENGTH-250 );
+  
+		pvisitor.add(scrollArea);
 	
-		
 		
 	}
 
